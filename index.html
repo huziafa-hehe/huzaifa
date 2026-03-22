@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Huzaifa · Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #0f0f1a;
+      --surface: #13131f;
+      --surface2: #1a1a2e;
+      --accent: #00f5c4;
+      --accent2: #0066ff;
+      --accent-dim: rgba(0, 245, 196, 0.08);
+      --text: #e8e8f0;
+      --muted: #6b6b8a;
+      --border: rgba(255,255,255,0.06);
+      --mono: 'Space Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,245,196,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,196,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── GLOW ORBS ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 500px; height: 500px;
+      background: rgba(0,245,196,0.06);
+      top: -100px; left: -150px;
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: rgba(0,102,255,0.07);
+      bottom: 200px; right: -100px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 5rem;
+    }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+
+    .hero-tag::before {
+      content: '> ';
+      opacity: 0.5;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.4s;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+      position: relative;
+    }
+
+    .hero-desc {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.6s;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.8s;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.75rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,245,196,0.3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ── SECTION ── */
+    section {
+      padding: 6rem 0;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 80px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+      line-height: 1.1;
+    }
+
+    /* ── PROJECT CARD ── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,245,196,0.2);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,245,196,0.05);
+    }
+
+    .project-header {
+      padding: 2rem 2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .project-icon {
+      width: 52px; height: 52px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(0,245,196,0.15);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .project-status {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      background: rgba(0,245,196,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(0,245,196,0.2);
+    }
+
+    .project-body {
+      padding: 1.5rem 2rem 2rem;
+    }
+
+    .project-name {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-tagline {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .project-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 2rem;
+    }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .feature {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      transition: border-color 0.2s;
+    }
+
+    .feature:hover { border-color: rgba(0,245,196,0.15); }
+
+    .feature-icon {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .feature-desc {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── TECH STACK ── */
+    .stack-section {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .stack-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-right: 0.5rem;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--bg2);
+      transition: all 0.2s;
+    }
+
+    .tag:hover {
+      border-color: rgba(0,245,196,0.3);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .tag.kotlin { border-color: rgba(126,87,194,0.3); color: #b39ddb; }
+    .tag.python { border-color: rgba(55,178,77,0.3); color: #81c784; }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .about-card:hover {
+      border-color: rgba(0,245,196,0.15);
+      transform: translateY(-2px);
+    }
+
+    .about-card h3 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      font-family: var(--mono);
+    }
+
+    .about-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .about-card.full { grid-column: 1 / -1; }
+
+    /* ── TERMINAL ── */
+    .terminal {
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 3rem;
+    }
+
+    .terminal-bar {
+      background: var(--surface);
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .terminal-title {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-left: 0.5rem;
+    }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 2;
+    }
+
+    .t-prompt { color: var(--accent); }
+    .t-cmd { color: var(--text); }
+    .t-out { color: var(--muted); }
+    .t-ok { color: #28c840; }
+    .t-info { color: var(--accent2); }
+
+    /* ── CONTACT ── */
+    .contact-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .contact-box h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-box p {
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    footer span { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-card.full { grid-column: 1; }
+      .nav-links { display: none; }
+      .contact-box { padding: 2rem 1.5rem; }
+      .project-header { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">huzaifa@portfolio:~$</div>
+    <ul class="nav-links">
+      <li><a href="#project">Project</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="container">
+    <section class="hero">
+      <p class="hero-tag">Building from scratch</p>
+      <h1>Hi, I'm<br/><span>Huzaifa.</span></h1>
+      <p class="hero-desc">
+        Developer & aspiring cybersecurity professional.<br/>
+        I build real tools that solve real problems —<br/>
+        starting with HomeCloud.
+      </p>
+      <div class="hero-cta">
+        <a href="#project" class="btn btn-primary">View Project</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- PROJECT -->
+  <div class="container" id="project">
+    <section>
+      <p class="section-label reveal">Featured Project</p>
+      <h2 class="section-title reveal">What I built.</h2>
+
+      <div class="project-card reveal">
+        <div class="project-header">
+          <div class="project-icon">☁️</div>
+          <span class="project-status">● Live</span>
+        </div>
+        <div class="project-body">
+          <h3 class="project-name">HomeCloud</h3>
+          <p class="project-tagline">// locally hosted backup system · self-sovereign data</p>
+          <p class="project-desc">
+            A fully self-hosted backup application built from the ground up. HomeCloud gives you complete control over your data — no third-party cloud, no subscriptions, no privacy compromises. Run it on your own hardware and back up what matters, on your terms.
+          </p>
+
+          <div class="features-grid">
+            <div class="feature">
+              <div class="feature-icon">🔒</div>
+              <div class="feature-title">Private by Design</div>
+              <div class="feature-desc">Your data never leaves your network. Full local control.</div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">⚡</div>
+              <div class="feature-title">Fast & Lightweight</div>
+              <div class="feature-desc">Optimized Kotlin backend keeps resource usage minimal.</div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">🐍</div>
+              <div class="feature-title">Python Automation</div>
+              <div class="feature-desc">Scripted backup jobs, scheduling, and restore workflows.</div>
+            </div>
+            <div class="feature">
+              <div class="feature-icon">🏠</div>
+              <div class="feature-title">Self-Hosted</div>
+              <div class="feature-desc">Runs on your own server — TrueNAS, Raspberry Pi, anything.</div>
+            </div>
+          </div>
+
+          <div class="stack-section">
+            <span class="stack-label">Stack</span>
+            <span class="tag kotlin">Kotlin</span>
+            <span class="tag python">Python</span>
+            <span class="tag">Docker</span>
+            <span class="tag">REST API</span>
+            <span class="tag">Self-Hosted</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TERMINAL -->
+      <div class="terminal reveal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <span class="terminal-title">homecloud — bash</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="t-prompt">huzaifa@homecloud:~$ </span><span class="t-cmd">docker ps | grep homecloud</span></div>
+          <div><span class="t-out">570bc783044d   homecloud:latest   "homecloud-daemon"   Up 3 days</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-prompt">huzaifa@homecloud:~$ </span><span class="t-cmd">homecloud status</span></div>
+          <div><span class="t-ok">✔ Backup service running</span></div>
+          <div><span class="t-ok">✔ Last backup: 2 hours ago</span></div>
+          <div><span class="t-info">→ 3 jobs scheduled · 0 errors</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-prompt">huzaifa@homecloud:~$ </span><span class="t-cmd">_</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="container" id="about">
+    <section>
+      <p class="section-label reveal">About Me</p>
+      <h2 class="section-title reveal">The person<br/>behind the code.</h2>
+
+      <div class="about-grid">
+        <div class="about-card reveal">
+          <h3>Background</h3>
+          <p>Self-taught developer with a passion for building practical tools. I learn by doing — HomeCloud started as a personal need and became a real project.</p>
+        </div>
+        <div class="about-card reveal">
+          <h3>Direction</h3>
+          <p>Pursuing cybersecurity certifications. I'm interested in the intersection of infrastructure, privacy, and security — the backbone of how systems stay safe.</p>
+        </div>
+        <div class="about-card reveal">
+          <h3>Tech I Work With</h3>
+          <p>Kotlin · Python · Docker · TrueNAS · Linux · Tailscale · Networking fundamentals. Always learning, always building.</p>
+        </div>
+        <div class="about-card reveal">
+          <h3>Philosophy</h3>
+          <p>Ship something real. A working project that solves a problem beats a perfect project that never ships. Build, iterate, improve.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="container" id="contact">
+    <section>
+      <p class="section-label reveal">Contact</p>
+      <div class="contact-box reveal">
+        <h2>Let's connect.</h2>
+        <p>
+          I'm early in my journey — open to feedback,<br/>
+          collaboration, and opportunities in cybersecurity.
+        </p>
+        <a href="https://github.com/huzaifa" target="_blank" class="btn btn-primary">github.com/huzaifa</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Built by <span>Huzaifa</span> · HomeCloud &copy; 2026 · <span>huzaifa.github.io</span></p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Blinking cursor in terminal
+    const cursor = document.querySelector('.terminal-body div:last-child .t-cmd');
+    if (cursor) {
+      setInterval(() => {
+        cursor.textContent = cursor.textContent === '_' ? '' : '_';
+      }, 600);
+    }
+  </script>
+</body>
+</html>
